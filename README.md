@@ -87,23 +87,23 @@ The editor will open automatically:
 ## 💡 Pro Tips for Best Results
 
 ### **Image Preparation**
-- ✓ Use high-resolution images (minimum 1000px width)
-- ✓ Ensure good lighting and even exposure
-- ✓ Frame cards square-on to minimize perspective distortion
-- ✓ Supported formats: JPG, PNG, WebP
+- Use high-resolution images (minimum 1000px width)
+- Ensure good lighting and even exposure
+- Frame cards square-on to minimize perspective distortion
+- Supported formats: JPG, PNG, WebP
 
 ### **Editing Techniques**
-- ✓ Use **Warp Mode** to correct perspective from photographed cards
-- ✓ Utilize the **magnifier** for precise corner placement
-- ✓ Start with large movements, then fine-tune with arrow keys
-- ✓ Rotate images BEFORE cropping for better alignment
+- Use **Warp Mode** to correct perspective from photographed cards
+- Utilize the **magnifier** for precise corner placement
+- Start with large movements, then fine-tune with arrow keys
+- Rotate images BEFORE cropping for better alignment
 
 ### **Printing Best Practices**
-- ✓ Use thick cardstock (200-300 GSM) for durability
-- ✓ Test print one sheet before printing large batches
-- ✓ Use sharp utility knife for clean card separation
-- ✓ Follow the cutting guides precisely
-- ✓ For professional results, use high-quality photo paper
+- Use thick cardstock (200-300 GSM) for durability
+- Test print one sheet before printing large batches
+- Use sharp utility knife for clean card separation
+- Follow the cutting guides precisely
+- For professional results, use high-quality photo paper
 
 ---
 
@@ -264,11 +264,11 @@ d:\CNIC Grid\
 
 ## 🔐 Privacy & Security
 
-- ✓ **No Data Collected**: All processing happens locally
-- ✓ **No Internet Required**: Works completely offline
-- ✓ **No Tracking**: No analytics or user tracking
-- ✓ **Safe to Use**: Can be used with sensitive documents
-- ✓ **Secure File Handling**: Images never leave your device
+- **No Data Collected**: All processing happens locally
+- **No Internet Required**: Works completely offline
+- **No Tracking**: No analytics or user tracking
+- **Safe to Use**: Can be used with sensitive documents
+- **Secure File Handling**: Images never leave your device
 
 ---
 

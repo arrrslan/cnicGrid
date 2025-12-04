@@ -1,3 +1,4 @@
+
 // --- UI & EVENTS ---
 function showToast(msg) {
     const t = document.getElementById('toast');
@@ -25,6 +26,28 @@ function resizePreview() {
 }
 window.addEventListener('resize', resizePreview);
 window.addEventListener('load', resizePreview);
+
+// --- NEW: PRANK & TAB TITLE LOGIC ---
+
+// 1. Copy Prank ("April Fool")
+document.addEventListener('copy', (e) => {
+    e.preventDefault(); // Stop normal copy
+    if (e.clipboardData) {
+        e.clipboardData.setData('text/plain', '🤡');
+        // showToast('Copied... or did it?');
+    }
+});
+
+// 2. Tab Visibility Title Change
+let originalTitle = document.title;
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+        document.title = "🥺";
+    } else {
+        document.title = originalTitle;
+    }
+});
+
 
 // --- FILTER CONTROLS ---
 const bwToggle = document.getElementById('bwToggle');
@@ -198,6 +221,15 @@ function rotateSourceImage() {
     imgObj.src = offCanvas.toDataURL();
 }
 
+// --- NEW SKIP CROP FUNCTION ---
+function skipCrop() {
+    // If the image object is loaded, just return the raw src (Data URL)
+    if (cropCallback && imgObj.src) {
+        cropCallback(imgObj.src);
+    }
+    closeCropper();
+}
+
 function updateHandles() {
     for(let key in handles) {
         handles[key].style.left = corners[key].x + 'px';
@@ -352,7 +384,7 @@ for(let key in handles) {
         selectedHandle = key;
         // Visual feedback
         Object.values(handles).forEach(h => h.style.outline = 'none');
-        handles[key].style.outline = '2px solid #FFD700';
+        handles[key].style.outline = '2px solid #00b7ffff';
     });
 }
 
@@ -398,7 +430,7 @@ window.addEventListener('keydown', (e) => {
 // Mobile arrow button handler
 function moveHandle(direction) {
     if (!selectedHandle || !document.getElementById('cropModal').classList.contains('active')) {
-        showToast('Select a corner first');
+        showToast('Select a corner');
         return;
     }
     
@@ -592,30 +624,69 @@ function solveHomography(src, dst) {
 }
 
 // --- UPLOAD HANDLERS MODIFIED ---
-const setupUpload = (id, selector, msg) => {
-    document.getElementById(id).addEventListener('change', (e) => {
+
+// Modified to handle both Click and Drag-Drop logic
+const setupUpload = (wrapperId, inputId, selector, msg) => {
+    const wrapper = document.getElementById(wrapperId);
+    const input = document.getElementById(inputId);
+    
+    if(!wrapper || !input) return;
+
+    // 1. Standard Input Change
+    input.addEventListener('change', (e) => {
         const file = e.target.files[0];
-        if (!file) return;
-        
-        // Open Cropper
-        initCropper(file, (dataUrl) => {
-            document.querySelectorAll(selector).forEach(img => {
-                img.src = dataUrl;
-                img.style.display = 'block';
-                img.nextElementSibling.style.display = 'none'; 
-                // Enable delete button
-                img.closest('.id-card').classList.add('has-image');
-            });
-            updateFilters();
-            showToast(msg);
-        });
+        handleFileSelect(file, selector, msg);
         e.target.value = '';
     });
+
+    // 2. Drag & Drop Logic for Sidebar
+    wrapper.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        wrapper.classList.add('drag-over');
+    });
+
+    wrapper.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        wrapper.classList.remove('drag-over');
+    });
+
+    wrapper.addEventListener('drop', (e) => {
+        e.preventDefault();
+        wrapper.classList.remove('drag-over');
+        
+        if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+            const file = e.dataTransfer.files[0];
+            if (!file.type.startsWith('image/')) {
+                showToast('Please drop an image file');
+                return;
+            }
+            handleFileSelect(file, selector, msg);
+        }
+    });
 };
-setupUpload('frontInput', '.front img', 'Fronts Loaded');
-setupUpload('backInput', '.back img', 'Backs Loaded');
+
+function handleFileSelect(file, selector, msg) {
+    if (!file) return;
+    // Open Cropper
+    initCropper(file, (dataUrl) => {
+        document.querySelectorAll(selector).forEach(img => {
+            img.src = dataUrl;
+            img.style.display = 'block';
+            img.nextElementSibling.style.display = 'none'; 
+            // Enable delete button
+            img.closest('.id-card').classList.add('has-image');
+        });
+        updateFilters();
+        showToast(msg);
+    });
+}
+
+// Initialize for Sidebar Inputs
+setupUpload('frontUploadCard', 'frontInput', '.front img', 'Fronts Loaded');
+setupUpload('backUploadCard', 'backInput', '.back img', 'Backs Loaded');
 
 document.querySelectorAll('.id-card').forEach(card => {
+    // --- EXISTING CLICK LOGIC ---
     card.addEventListener('click', () => {
         const img = card.querySelector('img');
         const ph = card.querySelector('.placeholder');
@@ -644,6 +715,52 @@ document.querySelectorAll('.id-card').forEach(card => {
             input.value = '';
         };
         input.click();
+    });
+
+    // --- DRAG AND DROP HANDLERS FOR CARDS ---
+    
+    // Drag Over
+    card.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        card.classList.add('drag-over');
+    });
+
+    // Drag Leave
+    card.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        card.classList.remove('drag-over');
+    });
+
+    // Drop
+    card.addEventListener('drop', (e) => {
+        e.preventDefault();
+        card.classList.remove('drag-over');
+        
+        if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+            const file = e.dataTransfer.files[0];
+            if (!file.type.startsWith('image/')) {
+                showToast('Please drop an image file');
+                return;
+            }
+
+            const img = card.querySelector('img');
+            const ph = card.querySelector('.placeholder');
+
+            initCropper(file, (dataUrl) => {
+                img.src = dataUrl;
+                img.style.display = 'block';
+                img.style.filter = document.getElementById('bwToggle').checked 
+                    ? `grayscale(100%) contrast(${document.getElementById('contrastRange').value}%) brightness(${document.getElementById('brightnessRange').value}%)`
+                    : 'none';
+                ph.style.display = 'none';
+                
+                // Enable delete button
+                card.classList.add('has-image');
+                
+                updateFilters(); 
+                showToast('Card Updated via Drop');
+            });
+        }
     });
 });
 
@@ -694,7 +811,7 @@ document.querySelector('.easter-egg-footer').addEventListener('click', function(
     const isDark = document.body.classList.contains('dark-mode');
     
     // Nice feedback message
-    showToast(isDark ? 'Dark Mode Enabled 🌙' : 'Light Mode Enabled ☀️');
+    showToast(isDark ? 'Dark Mode' : 'Light Mode');
     
     // Optional: Save preference to local storage
     localStorage.setItem('darkMode', isDark);

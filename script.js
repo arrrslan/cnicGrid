@@ -603,6 +603,8 @@ const setupUpload = (id, selector, msg) => {
                 img.src = dataUrl;
                 img.style.display = 'block';
                 img.nextElementSibling.style.display = 'none'; 
+                // Enable delete button
+                img.closest('.id-card').classList.add('has-image');
             });
             updateFilters();
             showToast(msg);
@@ -629,6 +631,10 @@ document.querySelectorAll('.id-card').forEach(card => {
                         ? `grayscale(100%) contrast(${document.getElementById('contrastRange').value}%) brightness(${document.getElementById('brightnessRange').value}%)`
                         : 'none';
                     ph.style.display = 'none';
+                    
+                    // Enable delete button for this card
+                    card.classList.add('has-image');
+
                     // No global filter update needed, just this card if strict
                     // But usually best to just run updateFilters()
                     updateFilters(); 
@@ -641,7 +647,31 @@ document.querySelectorAll('.id-card').forEach(card => {
     });
 });
 
+// --- INDIVIDUAL IMAGE DELETION ---
+document.querySelectorAll('.delete-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        e.stopPropagation(); // Stop trigger of file upload
+        const card = btn.closest('.id-card');
+        const img = card.querySelector('img');
+        const ph = card.querySelector('.placeholder');
+        
+        // Reset Logic
+        img.src = '';
+        img.style.display = 'none';
+        ph.style.display = 'block';
+        
+        // Remove active state
+        card.classList.remove('has-image');
+        
+        showToast('Image Removed');
+    });
+});
+
 function clearAll() {
+    document.querySelectorAll('.id-card').forEach(card => {
+        card.classList.remove('has-image');
+    });
+
     document.querySelectorAll('.id-card img').forEach(img => {
         img.src = ''; img.style.display = 'none';
         img.style.filter = 'none';
@@ -657,3 +687,22 @@ function clearAll() {
     
     showToast('Grid Cleared');
 }
+
+// --- EASTER EGG DARK MODE TRIGGER ---
+document.querySelector('.easter-egg-footer').addEventListener('click', function() {
+    document.body.classList.toggle('dark-mode');
+    const isDark = document.body.classList.contains('dark-mode');
+    
+    // Nice feedback message
+    showToast(isDark ? 'Dark Mode Enabled 🌙' : 'Light Mode Enabled ☀️');
+    
+    // Optional: Save preference to local storage
+    localStorage.setItem('darkMode', isDark);
+});
+
+// Check local storage on load
+window.addEventListener('load', () => {
+    if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+    }
+});

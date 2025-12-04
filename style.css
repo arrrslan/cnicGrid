@@ -292,7 +292,7 @@ input[type=range]::-webkit-slider-runnable-track {
 .id-card {
     width: 85.6mm;
     height: 53.98mm;
-    background: #f8fafc; 
+    background: #fcf2f2c1; 
     border-radius: 3.18mm;
     border: 1px solid #e2e8f0;
     position: relative;
@@ -540,5 +540,6 @@ input[type=range]::-webkit-slider-runnable-track {
     .id-card { border: none; box-shadow: none; background: white !important; }
 
 }
+
 
 

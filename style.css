@@ -31,11 +31,36 @@
     --radius-lg: 1rem;
 }
 
+/* --- DARK MODE VARIABLES --- */
+body.dark-mode {
+    --primary: #ff5252;       /* Brighter Red for dark mode */
+    --primary-gradient: linear-gradient(135deg, #b91c1c 0%, #7f1d1d 100%);
+    --primary-hover: #ef4444;
+
+    --bg-body: #0f1012;       /* Deep Dark Background */
+    
+    --surface: rgba(30, 30, 35, 0.75);    /* Dark Glass */
+    --surface-secondary: rgba(30, 30, 35, 0.95);
+    --surface-hover: rgba(45, 45, 50, 0.85);
+
+    --text-main: #e4e4e7;     /* Light Gray Text */
+    --text-muted: #9ca3af;    /* Muted Gray Text */
+
+    --border: rgba(255, 255, 255, 0.1);
+    --border-active: rgba(239, 68, 68, 0.5);
+
+    /* Adjusted Shadows for Dark Mode */
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+    --shadow-xl: 0 12px 36px rgba(0, 0, 0, 0.6);
+}
+
 * { box-sizing: border-box; margin: 0; padding: 0; outline: none; -webkit-tap-highlight-color: transparent; }
 
 body {
     background-color: var(--bg-body);
-    /* Maroon gradient background - Light Mode */
+    /* Maroon gradient background - Light Mode (Default) */
     background-image: 
         radial-gradient(circle at 20% 50%, rgba(200, 30, 58, 0.08) 0%, transparent 50%),
         radial-gradient(circle at 80% 50%, rgba(200, 30, 58, 0.05) 0%, transparent 50%);
@@ -47,6 +72,16 @@ body {
     padding: 2rem;
     min-height: 100vh;
     gap: 2.5rem;
+    
+    /* Smooth Transition for Dark Mode Switch */
+    transition: background-color 0.5s ease, color 0.5s ease, background-image 0.5s ease;
+}
+
+/* Update Background for Dark Mode */
+body.dark-mode {
+    background-image: 
+        radial-gradient(circle at 20% 50%, rgba(200, 30, 58, 0.15) 0%, transparent 60%),
+        radial-gradient(circle at 80% 50%, rgba(200, 30, 58, 0.1) 0%, transparent 60%);
 }
 
 /* --- SIDEBAR CONTROLS - REDESIGNED --- */
@@ -54,7 +89,7 @@ body {
     position: sticky;
     top: 2rem;
     height: fit-content;
-    background: rgba(255, 255, 255, 0.75);
+    background: var(--surface); /* Use variable */
     padding: 2rem;
     border-radius: 24px;
     box-shadow: 
@@ -69,7 +104,14 @@ body {
     gap: 1.5rem;
     backdrop-filter: blur(25px);
     -webkit-backdrop-filter: blur(25px);
-    border: 1px solid rgba(255, 255, 255, 0.4);
+    border: 1px solid var(--border); /* Use variable */
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+body.dark-mode .controls {
+    box-shadow: 
+        0 4px 20px rgba(0,0,0,0.5), 
+        inset 0 0 0 1px rgba(255, 255, 255, 0.05);
 }
 
 .header { 
@@ -99,14 +141,14 @@ body {
     letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 0.25rem; display: flex; align-items: center; gap: 0.5rem;
 }
 .section-title::after {
-    content: ''; flex: 1; height: 1px; background: rgba(0,0,0,0.1);
+    content: ''; flex: 1; height: 1px; background: var(--border);
 }
 
 /* File Upload Cards - Clean Look */
 .upload-card {
     position: relative;
-    background: white;
-    border: 2px dashed rgba(200, 30, 58, 0.2);
+    background: var(--surface-secondary);
+    border: 2px dashed var(--border);
     border-radius: 16px;
     padding: 1rem 1.25rem;
     display: flex;
@@ -115,14 +157,14 @@ body {
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
     overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    box-shadow: var(--shadow-sm);
 }
 
 .upload-card:hover { 
     border-color: var(--primary);
     border-style: solid;
-    background: white;
-    box-shadow: 0 8px 24px rgba(200, 30, 58, 0.12);
+    background: var(--surface-secondary);
+    box-shadow: var(--shadow-md);
     transform: translateY(-2px);
 }
 
@@ -142,6 +184,11 @@ body {
     justify-content: center;
     color: var(--primary);
     transition: all 0.3s ease;
+}
+
+/* Dark Mode specific adjustment for icon wrapper bg */
+body.dark-mode .upload-icon-wrapper {
+    background: rgba(255, 255, 255, 0.05);
 }
 
 .upload-card:hover .upload-icon-wrapper {
@@ -170,28 +217,30 @@ body {
 .switch-row { 
     display: flex; align-items: center; justify-content: space-between; 
     padding: 0.85rem 1.25rem;
-    border: 1px solid rgba(0,0,0,0.05);
+    border: 1px solid var(--border);
     border-radius: 16px;
-    background: white;
+    background: var(--surface-secondary);
     transition: 0.3s;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    box-shadow: var(--shadow-sm);
 }
-.switch-row:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.05); transform: translateY(-1px); }
+.switch-row:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
 
 .switch-label { font-size: 0.9rem; font-weight: 600; color: var(--text-main); }
 
 .switch { position: relative; width: 40px; height: 22px; }
 .switch input { opacity: 0; width: 0; height: 0; }
 .slider { position: absolute; cursor: pointer; inset: 0; background-color: #e2e8f0; transition: .3s; border-radius: 24px; }
+body.dark-mode .slider { background-color: #333; }
+
 .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
 input:checked + .slider { background: var(--primary); }
 input:checked + .slider:before { transform: translateX(18px); }
 
 /* Sliders */
 #scanControls {
-    margin-top: 1rem; padding: 1.25rem; background: white; border-radius: 16px; 
-    border: 1px solid rgba(0,0,0,0.05);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    margin-top: 1rem; padding: 1.25rem; background: var(--surface-secondary); border-radius: 16px; 
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
 }
 
 input[type=range] {
@@ -205,10 +254,16 @@ input[type=range]::-webkit-slider-thumb {
     box-shadow: 0 0 0 4px rgba(255,255,255,1), 0 2px 8px rgba(0,0,0,0.2);
     transition: transform 0.1s;
 }
+body.dark-mode input[type=range]::-webkit-slider-thumb {
+    box-shadow: 0 0 0 4px rgba(60,60,60,1), 0 2px 8px rgba(0,0,0,0.5);
+}
+
 input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.1); }
 input[type=range]::-webkit-slider-runnable-track {
     width: 100%; height: 4px; cursor: pointer; background: #e2e8f0; border-radius: 2px;
 }
+body.dark-mode input[type=range]::-webkit-slider-runnable-track { background: #333; }
+
 
 /* Action Buttons - Pill Shaped */
 .btn-group { display: grid; gap: 0.75rem; margin-top: 1rem; }
@@ -231,20 +286,20 @@ input[type=range]::-webkit-slider-runnable-track {
     letter-spacing: 0.02em;
 }
 .btn-primary:hover { 
-    background: #6b0000;
+    background: var(--primary-hover);
     box-shadow: 0 6px 16px rgba(128, 0, 0, 0.35); 
     transform: translateY(-2px);
 }
 
 .btn-ghost { 
-    background: white; 
+    background: var(--surface-secondary); 
     color: var(--text-main); 
-    border: 1px solid rgba(0,0,0,0.1); 
+    border: 1px solid var(--border); 
 }
 .btn-ghost:hover { 
-    background: #fcdcdc; 
+    background: rgba(200, 30, 58, 0.05);
     color: var(--primary); 
-    border-color: rgba(128,0,0,0.2);
+    border-color: var(--primary);
     transform: translateY(-2px);
 }
 
@@ -266,13 +321,13 @@ input[type=range]::-webkit-slider-runnable-track {
 .a4-sheet {
     width: 210mm;
     height: 297mm;
-    background: white;
-    /* box-shadow: var(--shadow-paper); /* For Sheet Shadow */ */
+    background: white; /* Paper remains white even in dark mode */
     padding: 0;
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: repeat(4, 1fr);
     position: relative;
+    /* Optional: Dim the paper slightly in dark mode if desired, but usually paper is white */
 }
 
 /* --- CUTTING GUIDES --- */
@@ -331,6 +386,43 @@ input[type=range]::-webkit-slider-runnable-track {
 .id-card:hover .placeholder i { color: var(--primary); transform: scale(1.2); }
 .id-card:hover .placeholder span { color: var(--primary); }
 
+/* --- NEW DELETE BUTTON --- */
+.delete-btn {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 28px;
+    height: 28px;
+    background: rgba(239, 68, 68, 0.9); /* Red */
+    color: white;
+    border: none;
+    border-radius: 50%;
+    display: none; /* Hidden by default */
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 50; /* Above image */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    transition: all 0.2s;
+    font-size: 0.8rem;
+}
+
+.delete-btn:hover {
+    background: #dc2626;
+    transform: scale(1.1);
+}
+
+/* Only show delete button when hovering over a card that has an active image */
+.id-card.has-image:hover .delete-btn {
+    display: flex;
+    animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+}
+
 /* --- CROPPER MODAL --- */
 .crop-modal {
     position: fixed; inset: 0; z-index: 1000;
@@ -343,6 +435,10 @@ input[type=range]::-webkit-slider-runnable-track {
     justify-content: center;
     padding: 2rem;
 }
+body.dark-mode .crop-modal {
+    background: rgba(0, 0, 0, 0.4);
+}
+
 .crop-modal.active { display: flex; }
 
 .crop-container {
@@ -395,6 +491,24 @@ input[type=range]::-webkit-slider-runnable-track {
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
+}
+body.dark-mode .crop-controls {
+    background: #1e1e1e;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+body.dark-mode .crop-controls-mobile {
+    background: #1e1e1e;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+
+body.dark-mode .arrow-btn {
+    background: #1e1e1e;
+    color: #ffffff;
+}
+
+body.dark-mode .arrow-btn:hover {
+    background: #1f0808;
+
 }
 
 .arrow-buttons {
@@ -492,21 +606,22 @@ input[type=range]::-webkit-slider-runnable-track {
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
     border: 1px solid rgba(255, 255, 255, 0.15);
-    padding: 8px 16px; border-radius: 50px; opacity: 0.8; transition: 0.3s; cursor: default; z-index: 100;
+    padding: 8px 16px; border-radius: 50px; opacity: 0.8; transition: 0.3s; cursor: pointer; z-index: 100;
     font-family: 'Google Sans Flex', sans-serif; letter-spacing: 0.05em; text-transform: uppercase;
+    user-select: none;
 }
 .easter-egg-footer:hover { opacity: 1; background: rgba(200, 30, 58, 0.1); color: #c41e3a; }
 
 /* Toast Notification */
 .toast {
     position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(100px);
-    background: rgba(255, 255, 255, 0.95); 
-    color: #1a1a1a; padding: 0.75rem 1.5rem;
+    background: var(--surface-secondary); 
+    color: var(--text-main); padding: 0.75rem 1.5rem;
     border-radius: 3rem; font-size: 0.9rem; font-weight: 500;
-    box-shadow: 0 8px 32px rgba(200, 30, 58, 0.2); 
+    box-shadow: var(--shadow-xl); 
     transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     z-index: 2000; display: flex; align-items: center; gap: 0.75rem; 
-    border: 2px solid #c41e3a;
+    border: 2px solid var(--primary);
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
 }
@@ -526,20 +641,42 @@ input[type=range]::-webkit-slider-runnable-track {
 @media print {
     * { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
     @page { size: A4 portrait; margin: 0; }
-    html, body { width: 100%; margin: 0; padding: 0; background: white; height: auto; overflow: visible; }
-    .controls, .modal-overlay, .toast, .easter-egg-footer, .crop-modal, .zoom-window { display: none !important; }
-    .preview-container { display: block; margin: 0; padding: 0; width: 100%; height: auto; overflow: visible; }
-    .preview-scaler { transform: scale(1) !important; margin: 0 !important; width: 100%; height: auto; }
-    .a4-sheet {
-        width: 210mm; height: 295mm; margin: 0 auto; box-shadow: none;
-        page-break-after: avoid; page-break-inside: avoid; background-image: none; overflow: hidden;
+    html, body { 
+        width: 100%; margin: 0; padding: 0; background: white; 
+        height: 100%; overflow: visible; 
     }
+    .controls, .modal-overlay, .toast, .easter-egg-footer, .crop-modal, .zoom-window { display: none !important; }
+    
+    .preview-container { 
+        display: block; margin: 0; padding: 0; width: 100%; height: auto; overflow: visible; 
+    }
+    
+    .preview-scaler { 
+        /* Reset scale to 100% as requested */
+        transform: none !important; 
+        transform-origin: top center !important;
+        margin: 0 !important; 
+        width: 100%; 
+        height: auto; 
+    }
+    
+    .a4-sheet {
+        width: 210mm; 
+        height: 297mm; /* Full A4 height to ensure borders reach bottom */
+        margin: 0 auto; 
+        box-shadow: none;
+        page-break-after: avoid; 
+        page-break-inside: avoid; 
+        background-image: none; 
+        overflow: hidden;
+        border: none;
+    }
+    
     .card-slot { border-right: 1px dashed #94a3b8 !important; border-bottom: 1px dashed #94a3b8 !important; }
     .card-slot:nth-child(2n) { border-right: none !important; }
     .card-slot:nth-last-child(-n+2) { border-bottom: none !important; }
     .id-card { border: none; box-shadow: none; background: white !important; }
-
+    
+    /* Ensure delete buttons are gone in print */
+    .delete-btn { display: none !important; }
 }
-
-
-

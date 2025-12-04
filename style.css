@@ -90,7 +90,7 @@ body {
     font-size: 1rem; 
     box-shadow: 0 4px 10px rgba(128, 0, 0, 0.3); 
 }
-.header p { font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem; font-weight: 500; }
+.header p { font-size: 0.85rem; color: var(--text-muted); margin-top: 0.6rem; font-weight: 500; }
 
 .section-group { display: flex; flex-direction: column; gap: 0.75rem; }
 
@@ -537,4 +537,5 @@ input[type=range]::-webkit-slider-runnable-track {
     .card-slot:nth-child(2n) { border-right: none !important; }
     .card-slot:nth-last-child(-n+2) { border-bottom: none !important; }
     .id-card { border: none; box-shadow: none; background: white !important; }
+
 }

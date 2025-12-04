@@ -4,35 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ID Card Grid A4</title>
-    <!-- Favicon -->
     <link rel="icon" 
       href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect x='32' y='80' width='448' height='352' rx='32' ry='32' fill='%23800000'/><path d='M104 160c-2.2 0-4 1.8-4 4v56c0 2.2 1.8 4 4 4h48c2.2 0 4-1.8 4-4v-56c0-2.2-1.8-4-4-4H104zM164 160c-2.2 0-4 1.8-4 4v56c0 2.2 1.8 4 4 4h48c2.2 0 4-1.8 4-4v-56c0-2.2-1.8-4-4-4H164zM104 232c-2.2 0-4 1.8-4 4v56c0 2.2 1.8 4 4 4h48c2.2 0 4-1.8 4-4v-56c0-2.2-1.8-4-4-4H104zM164 232c-2.2 0-4 1.8-4 4v56c0 2.2 1.8 4 4 4h48c2.2 0 4-1.8 4-4v-56c0-2.2-1.8-4-4-4H164z' fill='%23FFC000'/></svg>">
    
-    <!-- Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap" rel="stylesheet">
 
-    <!-- Linked CSS File -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- SIDEBAR -->
     <aside class="controls">
         <div class="header">
             <h1><i class="fa-solid fa-id-card-clip"></i> Card Setup</h1>
-        <!-- </br> -->
         <p>4 : 2 ID Card Grid on A4 Page</p>
         </div>
 
         <div class="section-group">
             <span class="section-title">Upload Images</span>
             <div style="display: grid; gap: 0.75rem;">
-                <div class="upload-card">
+                <div class="upload-card" id="frontUploadCard">
                     <input type="file" id="frontInput" class="upload-input" accept="image/*">
                     <div class="upload-content">
                         <div class="upload-icon-wrapper">
@@ -44,7 +38,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="upload-card">
+                
+                <div class="upload-card" id="backUploadCard">
                     <input type="file" id="backInput" class="upload-input" accept="image/*">
                     <div class="upload-content">
                         <div class="upload-icon-wrapper">
@@ -62,7 +57,6 @@
         <div class="section-group">
             <span class="section-title">Preferences</span>
             <div class="settings-card">
-                <!-- B&W Toggle -->
                 <div class="switch-row">
                     <span class="switch-label">Black & White</span>
                     <label class="switch">
@@ -71,7 +65,6 @@
                     </label>
                 </div>
 
-                <!-- Scan Effect Controls -->
                 <div id="scanControls" style="display: none;">
                     <div style="margin-bottom: 1rem;">
                         <label style="display: flex; justify-content: space-between; font-size: 0.8rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.75rem; text-transform: uppercase;">
@@ -101,11 +94,9 @@
         </div>
     </aside>
 
-    <!-- PREVIEW AREA -->
     <main class="preview-container">
         <div id="scaler" class="preview-scaler">
             <div id="printArea" class="a4-sheet">
-                <!-- Added delete buttons to each card slot -->
                 <div class="card-slot">
                     <div class="id-card front">
                         <img alt="">
@@ -169,23 +160,19 @@
         </div>
     </main>
 
-    <!-- ZOOM VIEWER -->
     <div class="zoom-window" id="zoomWindow">
         <canvas id="zoomCanvas"></canvas>
     </div>
 
-    <!-- CROPPER MODAL -->
     <div class="crop-modal" id="cropModal">
-        <h2 style="color:rgb(255, 65, 65); margin-bottom: 1.5rem; font-size: 1.2rem; font-weight: 600; letter-spacing: 0.05em;">ADJUST CARD CORNERS</h2>
+        <h2 style="color:rgb(255, 255, 255); margin-bottom: 1.5rem; font-size: 1.2rem; font-weight: 600; letter-spacing: 0.05em; text-shadow: 0 0 6.5px rgb(196, 57, 57);">ADJUST CARD CORNERS</h2>
         <div class="crop-container">
             <div class="crop-canvas-wrapper" id="cropWrapper">
                 <canvas id="cropCanvas"></canvas>
-                <!-- Handles -->
                 <div class="crop-handle" id="h-tl"></div>
                 <div class="crop-handle" id="h-tr"></div>
                 <div class="crop-handle" id="h-br"></div>
                 <div class="crop-handle" id="h-bl"></div>
-                <!-- Lines -->
                 <div class="crop-line" id="l-t"></div>
                 <div class="crop-line" id="l-r"></div>
                 <div class="crop-line" id="l-b"></div>
@@ -205,6 +192,11 @@
             <button class="btn btn-ghost" onclick="rotateSourceImage()" style="border-color: #c41e3a; color: #c41e3a;">
                 <i class="fa-solid fa-rotate-right"></i> Rotate
             </button>
+            
+            <button class="btn btn-ghost" onclick="skipCrop()" style="border-color: #10b981; color: #10b981;">
+                <i class="fa-solid fa-forward"></i> Skip
+            </button>
+            
             <button class="btn btn-primary" onclick="applyCrop()" style="background: linear-gradient(135deg, #c41e3a 0%, #8b0000 100%); box-shadow: 0 6px 20px rgba(200, 30, 58, 0.3); border: none; color: white;"><i class="fa-solid fa-crop"></i> Crop</button>
             
             <div class="arrow-buttons" id="arrowButtons">
@@ -215,17 +207,21 @@
             </div>
         </div>
 
-        <!-- Mobile-only controls bar -->
         <div class="crop-controls-mobile" id="cropControlsMobile">
             <button class="btn btn-ghost" onclick="closeCropper()" style="border-color: #c41e3a; color: #c41e3a;">Cancel</button>
-            <button class="btn btn-ghost" onclick="rotateSourceImage()" style="border-color: #c41e3a; color: #c41e3a;">
+            <button class="btn btn-ghost" onclick="rotateSourceImage()" style="border-color: #c41e3a; color: #c41e3a;">Rotate
                 <i class="fa-solid fa-rotate-right"></i>
             </button>
-            <button class="btn btn-primary" onclick="applyCrop()" style="background: linear-gradient(135deg, #c41e3a 0%, #8b0000 100%); box-shadow: 0 6px 20px rgba(200, 30, 58, 0.3); border: none; color: white; padding:0.6rem 0.8rem;"><i class="fa-solid fa-crop"></i></button>
+            <button class="btn btn-ghost" onclick="skipCrop()" style="border-color: #10b981; color: #10b981; padding:0.6rem 0.8rem;">
+                <i class="fa-solid fa-forward"></i>Skip
+            <!-- </button> -->
+            <button class="btn btn-primary" onclick="applyCrop()" style="background: linear-gradient(135deg, #c41e3a 0%, #8b0000 100%); box-shadow: 0 6px 20px rgba(200, 30, 58, 0.3); border: none; color: white; padding:0.6rem 1.1rem; "><i class="fa-solid fa-crop"></i></button>
+           <!-- <button class="btn btn-primary" onclick="applyCrop()" style="background: linear-gradient(135deg, #c41e3a 0%, #8b0000 100%); box-shadow: 0 6px 20px rgba(200, 30, 58, 0.3); border: none; color: white; border-radius: 50%; width: 45px; height: 45px; padding: 0; display: inline-flex; justify-content: center; align-items: center;"> -->
+    <!-- <i class="fa-solid fa-crop"></i> -->
+</button>
         </div>
     </div>
 
-    <!-- EASTER EGG FOOTER -->
     <div class="easter-egg-footer"> 
         Developed with <span><i class="fa-solid fa-heart" style="font-size:0.8em; color: #ef4444;"></i></span> by Arslan
     </div>
@@ -237,7 +233,6 @@
         <span id="toastMsg">Action Successful</span>
     </div>
 
-    <!-- Linked JS File -->
     <script src="script.js"></script>
 </body>
 </html>
